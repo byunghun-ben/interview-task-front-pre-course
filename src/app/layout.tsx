@@ -13,7 +13,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body
+        style={{
+          backgroundColor: "#f6f6f6",
+        }}
+      >
         <LayoutRecoil>{children}</LayoutRecoil>
       </body>
     </html>
