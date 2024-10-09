@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useMemo, useState } from "react";
 import styled from "@emotion/styled";
 import CheckIcon from "../icons/CheckIcon";
 import CloseIcon from "../icons/CloseIcon";
@@ -127,6 +127,27 @@ const TodoUserListPage = ({ defaultTodos }: Props) => {
   const [todos, setTodos] = useState<Todo[]>(defaultTodos);
   const [tab, setTab] = useState<Tab>("all");
 
+  // 탭에 따라 보여질 todo 리스트를 필터링합니다.
+  const filteredTodos = useMemo(() => {
+    switch (tab) {
+      case "all": {
+        return todos;
+      }
+
+      case "active": {
+        return todos.filter((todo) => !todo.done);
+      }
+
+      case "completed": {
+        return todos.filter((todo) => todo.done);
+      }
+
+      default: {
+        return todos;
+      }
+    }
+  }, [todos, tab]);
+
   const [todoText, setTodoText] = useState("");
   const handleSubmit = () => {
     setTodos((todos) => addTodo(todoText, todos));
@@ -190,8 +211,8 @@ const TodoUserListPage = ({ defaultTodos }: Props) => {
         </Tab>
 
         <TodoList>
-          <TodoHeader>총 {todos.length}개</TodoHeader>
-          {todos.map((todo) => (
+          <TodoHeader>총 {filteredTodos.length}개</TodoHeader>
+          {filteredTodos.map((todo) => (
             <TodoItem key={todo.id}>
               <CheckButton
                 done={todo.done}
