@@ -5,6 +5,8 @@ import CheckIcon from "../icons/CheckIcon";
 import CloseIcon from "../icons/CloseIcon";
 import type { Todo, Tab } from "@/types";
 import { addTodo, removeTodo, toggleTodo } from "@/utils/todos";
+import AddTodoForm from "./TodoUserListPage/AddTodoForm";
+import TodoTab from "./TodoUserListPage/TodoTab";
 
 const Container = styled.div`
   width: 100%;
@@ -23,20 +25,6 @@ const H1 = styled.p`
   text-align: center;
 `;
 
-const Input = styled.input`
-  width: 100%;
-  background-color: #e5e5e5;
-  border: none;
-  border-radius: 24px;
-  padding: 32px;
-  font-size: 20px;
-  line-height: 28px;
-  margin-bottom: 32px;
-  ::placeholder {
-    color: #b9b9b9;
-  }
-`;
-
 const TodoContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -45,27 +33,6 @@ const TodoContainer = styled.div`
   background-color: white;
   padding: 32px;
   border-radius: 24px;
-`;
-
-const Tab = styled.div`
-  display: flex;
-  margin-bottom: 24px;
-`;
-
-const TabItem = styled.button<{ selected: boolean }>`
-  font-weight: 600;
-  color: ${(props) => (props.selected ? "#2182f3" : "#454545")};
-  padding: 8px 0;
-  width: 108px;
-  background-color: ${(props) => (props.selected ? "#ebf4ff" : "white")};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  border: none;
-
-  font-size: 16px;
-  line-height: 24px;
 `;
 
 const TodoList = styled.div`
@@ -148,10 +115,8 @@ const TodoUserListPage = ({ defaultTodos }: Props) => {
     }
   }, [todos, tab]);
 
-  const [todoText, setTodoText] = useState("");
-  const handleSubmit = () => {
+  const handleSubmit = (todoText: string) => {
     setTodos((todos) => addTodo(todoText, todos));
-    setTodoText("");
   };
 
   const handleClickCheckButton = (id: number) => {
@@ -165,50 +130,10 @@ const TodoUserListPage = ({ defaultTodos }: Props) => {
   return (
     <Container>
       <H1>To Do List</H1>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          handleSubmit();
-        }}
-      >
-        <Input
-          type="text"
-          name="todoText"
-          placeholder="할 일을 입력해 주세요"
-          onChange={(event) => {
-            setTodoText(event.target.value);
-          }}
-          value={todoText}
-        />
-      </form>
+      <AddTodoForm onSubmit={handleSubmit} />
 
       <TodoContainer>
-        <Tab>
-          <TabItem
-            selected={tab === "all"}
-            onClick={() => {
-              setTab("all");
-            }}
-          >
-            All
-          </TabItem>
-          <TabItem
-            selected={tab === "active"}
-            onClick={() => {
-              setTab("active");
-            }}
-          >
-            To Do
-          </TabItem>
-          <TabItem
-            selected={tab === "completed"}
-            onClick={() => {
-              setTab("completed");
-            }}
-          >
-            Done
-          </TabItem>
-        </Tab>
+        <TodoTab selected={tab} onChange={setTab} />
 
         <TodoList>
           <TodoHeader>총 {filteredTodos.length}개</TodoHeader>
