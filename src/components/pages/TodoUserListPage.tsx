@@ -16,7 +16,7 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const H1 = styled.p`
+const H1 = styled.h1`
   font-size: 56px;
   line-height: 72px;
   font-weight: 700;
@@ -135,13 +135,20 @@ const TodoUserListPage = ({ defaultTodos }: Props) => {
       <TodoContainer>
         <TodoTab selected={tab} onChange={setTab} />
 
-        <TodoList>
-          <TodoHeader>총 {filteredTodos.length}개</TodoHeader>
+        <TodoList data-testid="todo-list">
+          <TodoHeader data-testid="todo-list-header">
+            총 {filteredTodos.length}개
+          </TodoHeader>
           {filteredTodos.map((todo) => (
-            <TodoItem key={todo.id}>
+            <TodoItem
+              key={todo.id}
+              data-testid={`todo-item-${todo.id}`}
+              data-done={todo.done}
+            >
               <CheckButton
                 done={todo.done}
                 onClick={() => handleClickCheckButton(todo.id)}
+                data-testid={`check-button-${todo.id}`}
               >
                 <CheckIcon
                   width={20}
@@ -152,7 +159,10 @@ const TodoUserListPage = ({ defaultTodos }: Props) => {
                 />
               </CheckButton>
               <TodoText done={todo.done}>{todo.text}</TodoText>
-              <DeleteButton onClick={() => handleClickDeleteButton(todo.id)}>
+              <DeleteButton
+                onClick={() => handleClickDeleteButton(todo.id)}
+                data-testid={`delete-button-${todo.id}`}
+              >
                 <CloseIcon />
               </DeleteButton>
             </TodoItem>

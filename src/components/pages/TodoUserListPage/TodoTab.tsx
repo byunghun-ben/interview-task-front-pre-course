@@ -37,6 +37,7 @@ const TodoTab = ({ selected, onChange }: Props) => {
         onClick={() => {
           onChange("all");
         }}
+        data-testid="all-tab"
       >
         All
       </TabItem>
@@ -45,6 +46,7 @@ const TodoTab = ({ selected, onChange }: Props) => {
         onClick={() => {
           onChange("active");
         }}
+        data-testid="active-tab"
       >
         To Do
       </TabItem>
@@ -53,6 +55,7 @@ const TodoTab = ({ selected, onChange }: Props) => {
         onClick={() => {
           onChange("completed");
         }}
+        data-testid="completed-tab"
       >
         Done
       </TabItem>

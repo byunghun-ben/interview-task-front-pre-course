@@ -34,6 +34,7 @@ const AddTodoForm = ({ onSubmit }: Props) => {
         event.preventDefault();
         handleSubmit();
       }}
+      data-testid="add-todo-form"
     >
       <Input
         type="text"
@@ -43,6 +44,7 @@ const AddTodoForm = ({ onSubmit }: Props) => {
           setTodoText(event.target.value);
         }}
         value={todoText}
+        data-testid="todo-text-input"
       />
     </form>
   );
