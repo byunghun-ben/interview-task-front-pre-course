@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import CheckIcon from "../icons/CheckIcon";
 import CloseIcon from "../icons/CloseIcon";
 import type { Todo, Tab } from "@/types";
-import { addTodo, toggleTodo } from "@/utils/todos";
+import { addTodo, removeTodo, toggleTodo } from "@/utils/todos";
 
 const Container = styled.div`
   width: 100%;
@@ -137,6 +137,10 @@ const TodoUserListPage = ({ defaultTodos }: Props) => {
     setTodos((todos) => toggleTodo(id, todos));
   };
 
+  const handleClickDeleteButton = (id: number) => {
+    setTodos((todos) => removeTodo(id, todos));
+  };
+
   return (
     <Container>
       <H1>To Do List</H1>
@@ -202,7 +206,7 @@ const TodoUserListPage = ({ defaultTodos }: Props) => {
                 />
               </CheckButton>
               <TodoText done={todo.done}>{todo.text}</TodoText>
-              <DeleteButton>
+              <DeleteButton onClick={() => handleClickDeleteButton(todo.id)}>
                 <CloseIcon />
               </DeleteButton>
             </TodoItem>
