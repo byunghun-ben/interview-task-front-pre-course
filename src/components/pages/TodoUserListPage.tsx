@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import styled from "@emotion/styled";
 import CheckIcon from "../icons/CheckIcon";
 import CloseIcon from "../icons/CloseIcon";
 import type { Todo, Tab } from "@/types";
+import { addTodo } from "@/utils/todos";
 
 const Container = styled.div`
   width: 100%;
@@ -126,10 +127,31 @@ const TodoUserListPage = ({ defaultTodos }: Props) => {
   const [todos, setTodos] = useState<Todo[]>(defaultTodos);
   const [tab, setTab] = useState<Tab>("all");
 
+  const [todoText, setTodoText] = useState("");
+  const handleSubmit = () => {
+    setTodos((todos) => addTodo(todoText, todos));
+    setTodoText("");
+  };
+
   return (
     <Container>
       <H1>To Do List</H1>
-      <Input type="text" placeholder="할 일을 입력해 주세요" />
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleSubmit();
+        }}
+      >
+        <Input
+          type="text"
+          name="todoText"
+          placeholder="할 일을 입력해 주세요"
+          onChange={(event) => {
+            setTodoText(event.target.value);
+          }}
+          value={todoText}
+        />
+      </form>
 
       <TodoContainer>
         <Tab>
