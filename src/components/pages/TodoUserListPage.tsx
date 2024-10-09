@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import CheckIcon from "../icons/CheckIcon";
 import CloseIcon from "../icons/CloseIcon";
 import type { Todo, Tab } from "@/types";
-import { addTodo } from "@/utils/todos";
+import { addTodo, toggleTodo } from "@/utils/todos";
 
 const Container = styled.div`
   width: 100%;
@@ -133,6 +133,10 @@ const TodoUserListPage = ({ defaultTodos }: Props) => {
     setTodoText("");
   };
 
+  const handleClickCheckButton = (id: number) => {
+    setTodos((todos) => toggleTodo(id, todos));
+  };
+
   return (
     <Container>
       <H1>To Do List</H1>
@@ -185,7 +189,10 @@ const TodoUserListPage = ({ defaultTodos }: Props) => {
           <TodoHeader>총 {todos.length}개</TodoHeader>
           {todos.map((todo) => (
             <TodoItem key={todo.id}>
-              <CheckButton done={todo.done}>
+              <CheckButton
+                done={todo.done}
+                onClick={() => handleClickCheckButton(todo.id)}
+              >
                 <CheckIcon
                   width={20}
                   height={20}
