@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import CheckIcon from "../icons/CheckIcon";
 import CloseIcon from "../icons/CloseIcon";
+import type { Todo, Tab } from "@/types";
 
 const Container = styled.div`
   width: 100%;
@@ -27,7 +28,6 @@ const Input = styled.input`
   border: none;
   border-radius: 24px;
   padding: 32px;
-  box-sizing: border-box;
   font-size: 20px;
   line-height: 28px;
   margin-bottom: 32px;
@@ -51,12 +51,12 @@ const Tab = styled.div`
   margin-bottom: 24px;
 `;
 
-const TabItem = styled.button`
+const TabItem = styled.button<{ selected: boolean }>`
   font-weight: 600;
-  color: #2182f3;
+  color: ${(props) => (props.selected ? "#2182f3" : "#454545")};
   padding: 8px 0;
   width: 108px;
-  background-color: #ebf4ff;
+  background-color: ${(props) => (props.selected ? "#ebf4ff" : "white")};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -82,13 +82,13 @@ const TodoHeader = styled.div`
 
 const TodoItem = styled.div`
   width: 100%;
-  padding: 16px;
+  padding: 32px 16px;
   display: flex;
   align-items: center;
   gap: 16px;
 `;
 
-const CheckButton = styled.button`
+const CheckButton = styled.button<{ done: boolean }>`
   width: 32px;
   height: 32px;
   border-radius: 16px;
@@ -96,14 +96,14 @@ const CheckButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #2182f3;
-  cursor: pointer;
+  background-color: ${(props) => (props.done ? "#2182f3" : "white")};
 `;
 
-const TodoText = styled.span`
+const TodoText = styled.span<{ done: boolean }>`
   flex: 1;
   font-size: 20px;
   line-height: 28px;
+  color: ${(props) => (props.done ? "#868686" : "#000000")};
 `;
 
 const DeleteButton = styled.button`
@@ -116,16 +116,15 @@ const DeleteButton = styled.button`
   align-items: center;
   background-color: transparent;
   color: #b9b9b9;
-  cursor: pointer;
 `;
 
-interface Props {}
+interface Props {
+  defaultTodos: Todo[];
+}
 
-const TodoUserListPage = ({}: Props) => {
-  const [todos, setTodos] = useState([
-    { id: 1, text: "할 일 1", done: false },
-    { id: 2, text: "할 일 2", done: true },
-  ]);
+const TodoUserListPage = ({ defaultTodos }: Props) => {
+  const [todos, setTodos] = useState<Todo[]>(defaultTodos);
+  const [tab, setTab] = useState<Tab>("all");
 
   return (
     <Container>
@@ -134,16 +133,37 @@ const TodoUserListPage = ({}: Props) => {
 
       <TodoContainer>
         <Tab>
-          <TabItem>All</TabItem>
-          <TabItem>To Do</TabItem>
-          <TabItem>Done</TabItem>
+          <TabItem
+            selected={tab === "all"}
+            onClick={() => {
+              setTab("all");
+            }}
+          >
+            All
+          </TabItem>
+          <TabItem
+            selected={tab === "active"}
+            onClick={() => {
+              setTab("active");
+            }}
+          >
+            To Do
+          </TabItem>
+          <TabItem
+            selected={tab === "completed"}
+            onClick={() => {
+              setTab("completed");
+            }}
+          >
+            Done
+          </TabItem>
         </Tab>
 
         <TodoList>
           <TodoHeader>총 {todos.length}개</TodoHeader>
           {todos.map((todo) => (
             <TodoItem key={todo.id}>
-              <CheckButton>
+              <CheckButton done={todo.done}>
                 <CheckIcon
                   width={20}
                   height={20}
@@ -152,7 +172,7 @@ const TodoUserListPage = ({}: Props) => {
                   }}
                 />
               </CheckButton>
-              <TodoText>{todo.text}</TodoText>
+              <TodoText done={todo.done}>{todo.text}</TodoText>
               <DeleteButton>
                 <CloseIcon />
               </DeleteButton>
